@@ -128,18 +128,19 @@ impl AudioInput {
         }
     }
 
-    pub fn stream(&mut self) -> AudioStream {
+    pub fn stream(&mut self) -> Option<AudioStream> {
         match &self.source {
-            AudioSource::RealtimeMic => AudioStream::RealtimeMic {
-                mic: self.mic.as_ref().unwrap().stream(),
+            AudioSource::RealtimeMic => {
+                let mic_stream = self.mic.as_ref()?.stream()?;
+                Some(AudioStream::RealtimeMic { mic: mic_stream })
             },
-            AudioSource::RealtimeSpeaker => AudioStream::RealtimeSpeaker {
+            AudioSource::RealtimeSpeaker => Some(AudioStream::RealtimeSpeaker {
                 speaker: self.speaker.take().unwrap().stream().unwrap(),
-            },
-            AudioSource::Recorded => AudioStream::Recorded {
+            }),
+            AudioSource::Recorded => Some(AudioStream::Recorded {
                 data: self.data.as_ref().unwrap().clone(),
                 position: 0,
-            },
+            }),
         }
     }
 }
