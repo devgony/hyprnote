@@ -12,14 +12,15 @@ use crate::AsyncSource;
 pub struct MicInput {
     #[allow(dead_code)]
     host: cpal::Host,
-    device: cpal::Device,
+    device: Option<cpal::Device>,
     config: cpal::SupportedStreamConfig,
 }
 
 impl MicInput {
     pub fn device_name(&self) -> String {
         self.device
-            .name()
+            .as_ref()
+            .and_then(|d| d.name().ok())
             .unwrap_or("Unknown Microphone".to_string())
     }
 
@@ -42,8 +43,7 @@ impl MicInput {
 
         let device = match device_name {
             None => default_input_device
-                .or_else(|| input_devices.into_iter().next())
-                .ok_or(crate::Error::NoInputDevice)?,
+                .or_else(|| input_devices.into_iter().next()),
             Some(name) => input_devices
                 .into_iter()
                 .find(|d| d.name().unwrap_or_default() == name)
@@ -52,11 +52,14 @@ impl MicInput {
                     host.input_devices()
                         .ok()
                         .and_then(|mut devices| devices.next())
-                })
-                .ok_or(crate::Error::NoInputDevice)?,
+                }),
         };
 
-        let config = device.default_input_config().unwrap();
+        let config = device
+            .as_ref()
+            .ok_or(crate::Error::NoInputDevice)?
+            .default_input_config()
+            .unwrap();
 
         Ok(Self {
             host,
@@ -71,7 +74,7 @@ impl MicInput {
         let (tx, rx) = mpsc::unbounded::<Vec<f32>>();
 
         let config = self.config.clone();
-        let device = self.device.clone();
+        let device = self.device.clone().expect("Device should be available when creating stream");
         let (drop_tx, drop_rx) = std::sync::mpsc::channel();
 
         std::thread::spawn(move || {
