@@ -255,18 +255,16 @@ impl Session {
 
         let mic_sample_stream = {
             let mut input = hypr_audio::AudioInput::from_mic(self.mic_device_name.clone())?;
-            input.stream().ok_or_else(|| hypr_audio::Error::NoInputDevice)?
+            input.stream()
         };
-        let mic_stream = mic_sample_stream
-            .resample(SAMPLE_RATE)
-            .chunks(hypr_aec::BLOCK_SIZE);
 
         // https://github.com/fastrepl/hyprnote/commit/7c8cf1c
         tokio::time::sleep(Duration::from_millis(65)).await;
         // We need some delay here for Airpod transition.
         // But if the delay is too long, AEC will not work.
 
-        let speaker_sample_stream = hypr_audio::AudioInput::from_speaker().stream()
+        let speaker_sample_stream = hypr_audio::AudioInput::from_speaker()
+            .stream()
             .ok_or_else(|| hypr_audio::Error::NoInputDevice)?;
         let speaker_stream = speaker_sample_stream
             .resample(SAMPLE_RATE)
@@ -281,11 +279,16 @@ impl Session {
 
         let mut tasks = JoinSet::new();
 
-        tasks.spawn(AudioChannels::process_mic_stream(
-            mic_stream,
-            mic_muted_rx_main.clone(),
-            channels.mic_tx.clone(),
-        ));
+        if let Some(mic_sample_stream) = mic_sample_stream {
+            let mic_stream = mic_sample_stream
+                .resample(SAMPLE_RATE)
+                .chunks(hypr_aec::BLOCK_SIZE);
+            tasks.spawn(AudioChannels::process_mic_stream(
+                mic_stream,
+                mic_muted_rx_main.clone(),
+                channels.mic_tx.clone(),
+            ));
+        }
 
         tasks.spawn(AudioChannels::process_speaker_stream(
             speaker_stream,
