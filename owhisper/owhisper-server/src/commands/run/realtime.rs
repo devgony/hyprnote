@@ -134,6 +134,7 @@ async fn run_audio_stream_with_stop(
 
         audio_input
             .stream()
+            .ok_or_else(|| anyhow::anyhow!("No audio device available"))?
             .resample(16000)
             .chunks(512)
             .map(move |chunk| {
