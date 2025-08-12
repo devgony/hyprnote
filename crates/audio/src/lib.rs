@@ -71,8 +71,9 @@ pub struct AudioInput {
 impl AudioInput {
     pub fn get_default_mic_device_name() -> String {
         let host = cpal::default_host();
-        let device = host.default_input_device().unwrap();
-        device.name().unwrap_or("Unknown Microphone".to_string())
+        host.default_input_device()
+            .and_then(|device| device.name().ok())
+            .unwrap_or("Unknown Microphone".to_string())
     }
 
     pub fn list_mic_devices() -> Vec<String> {
