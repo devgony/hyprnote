@@ -13,7 +13,7 @@ pub struct MicInput {
     #[allow(dead_code)]
     host: cpal::Host,
     device: Option<cpal::Device>,
-    config: cpal::SupportedStreamConfig,
+    config: Option<cpal::SupportedStreamConfig>,
 }
 
 impl MicInput {
@@ -57,9 +57,7 @@ impl MicInput {
 
         let config = device
             .as_ref()
-            .ok_or(crate::Error::NoInputDevice)?
-            .default_input_config()
-            .unwrap();
+            .map(|d| d.default_input_config().unwrap());
 
         Ok(Self {
             host,
@@ -73,8 +71,9 @@ impl MicInput {
     pub fn stream(&self) -> MicStream {
         let (tx, rx) = mpsc::unbounded::<Vec<f32>>();
 
-        let config = self.config.clone();
+        let config = self.config.clone().expect("Config should be available when creating stream");
         let device = self.device.clone().expect("Device should be available when creating stream");
+        let config_for_thread = config.clone();
         let (drop_tx, drop_rx) = std::sync::mpsc::channel();
 
         std::thread::spawn(move || {
@@ -102,11 +101,11 @@ impl MicInput {
             }
 
             let start_stream = || {
-                let stream = match config.sample_format() {
-                    cpal::SampleFormat::I8 => build_stream::<i8>(&device, &config, tx),
-                    cpal::SampleFormat::I16 => build_stream::<i16>(&device, &config, tx),
-                    cpal::SampleFormat::I32 => build_stream::<i32>(&device, &config, tx),
-                    cpal::SampleFormat::F32 => build_stream::<f32>(&device, &config, tx),
+                let stream = match config_for_thread.sample_format() {
+                    cpal::SampleFormat::I8 => build_stream::<i8>(&device, &config_for_thread, tx),
+                    cpal::SampleFormat::I16 => build_stream::<i16>(&device, &config_for_thread, tx),
+                    cpal::SampleFormat::I32 => build_stream::<i32>(&device, &config_for_thread, tx),
+                    cpal::SampleFormat::F32 => build_stream::<f32>(&device, &config_for_thread, tx),
                     sample_format => {
                         tracing::error!("Unsupported sample format '{sample_format}'");
                         return None;
@@ -145,7 +144,7 @@ impl MicInput {
         let receiver = rx.map(futures_util::stream::iter).flatten();
         MicStream {
             drop_tx,
-            config: self.config.clone(),
+            config: config.clone(),
             receiver: Box::pin(receiver),
             read_data: Vec::new(),
         }
