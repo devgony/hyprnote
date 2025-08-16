@@ -2,10 +2,10 @@
 MACOSX_DEPLOYMENT_TARGET = { value = "14.2", force = true }
 # Force static linking for all native dependencies
 LLAMA_STATIC = { value = "1", force = true }
-LLAMA_CMAKE_ARGS = { value = "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded -DCMAKE_BUILD_TYPE=Release", force = true }
+LLAMA_CMAKE_ARGS = { value = "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS_DEBUG=/MT -DCMAKE_C_FLAGS_DEBUG=/MT", force = true }
 ORT_STRATEGY = { value = "compile", force = true }
 ORT_USE_STATIC_RUNTIME = { value = "1", force = true }
-ORT_CMAKE_ARGS = { value = "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded -DCMAKE_BUILD_TYPE=Release -DABSL_MSVC_STATIC_RUNTIME=ON", force = true }
+ORT_CMAKE_ARGS = { value = "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded -DCMAKE_BUILD_TYPE=Release -DABSL_MSVC_STATIC_RUNTIME=ON -DCMAKE_CXX_FLAGS_DEBUG=/MT -DCMAKE_C_FLAGS_DEBUG=/MT", force = true }
 
 [target.'cfg(all(windows, target_env = "msvc"))']
 rustflags = [
