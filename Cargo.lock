@@ -4369,7 +4369,7 @@ checksum = "dea2df4cf52843e0452895c455a1a2cfbb842a1e7329671acf418fdc53ed4c59"
 [[package]]
 name = "esaxx-rs"
 version = "0.1.10"
-source = "git+https://github.com/thewh1teagle/esaxx-rs.git?branch=feat%2Fdynamic-msvc-link#3c8ac57d245ab328f7c71953b7c116a8d1d5498f"
+source = "git+https://github.com/thewh1teagle/esaxx-rs.git#5a573faadada925d25c39d5e0f6af7da596cef4e"
 dependencies = [
  "cc",
 ]
@@ -10170,7 +10170,6 @@ version = "2.0.0-rc.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1fa7e49bd669d32d7bc2a15ec540a527e7764aec722a45467814005725bcd721"
 dependencies = [
- "libloading 0.8.8",
  "ndarray",
  "ort-sys",
  "smallvec 2.0.0-alpha.10",

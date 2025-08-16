@@ -4,9 +4,16 @@ MACOSX_DEPLOYMENT_TARGET = { value = "14.2", force = true }
 LLAMA_STATIC = { value = "1", force = true }
 LLAMA_CMAKE_ARGS = { value = "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded", force = true }
 ORT_STRATEGY = { value = "compile", force = true }
+ORT_USE_STATIC_RUNTIME = { value = "1", force = true }
 
 [target.'cfg(all(windows, target_env = "msvc"))']
 rustflags = [
   "-C",
   "target-feature=+crt-static",
+  "-C",
+  "link-arg=/NODEFAULTLIB:libcmt",
+  "-C",
+  "link-arg=/NODEFAULTLIB:msvcrt",
+  "-C",
+  "link-arg=/DEFAULTLIB:libcmt",
 ]
