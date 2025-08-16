@@ -1,20 +1,32 @@
+#[cfg(target_os = "macos")]
 use itertools::Itertools;
+#[cfg(target_os = "macos")]
 use std::time::Duration;
 
+#[cfg(target_os = "macos")]
 use objc2::msg_send;
 
+#[cfg(target_os = "macos")]
 use block2::RcBlock;
+#[cfg(target_os = "macos")]
 use objc2::{rc::Retained, runtime::Bool, ClassType};
+#[cfg(target_os = "macos")]
 use objc2_contacts::{CNAuthorizationStatus, CNContactStore, CNEntityType};
+#[cfg(target_os = "macos")]
 use objc2_event_kit::{
     EKAuthorizationStatus, EKCalendar, EKEntityType, EKEvent, EKEventStore, EKParticipant,
 };
+#[cfg(target_os = "macos")]
 use objc2_foundation::{NSArray, NSDate, NSError, NSString};
 
 use hypr_calendar_interface::{
-    Calendar, CalendarSource, Error, Event, EventFilter, Participant, Platform,
+    Calendar, CalendarSource, Error, Event, EventFilter,
 };
 
+#[cfg(target_os = "macos")]
+use hypr_calendar_interface::{Participant, Platform};
+
+#[cfg(target_os = "macos")]
 pub struct Handle {
     event_store: Retained<EKEventStore>,
     contacts_store: Retained<CNContactStore>,
@@ -22,6 +34,10 @@ pub struct Handle {
     contacts_access_granted: bool,
 }
 
+#[cfg(not(target_os = "macos"))]
+pub struct Handle;
+
+#[cfg(target_os = "macos")]
 #[allow(clippy::new_without_default)]
 impl Handle {
     pub fn new() -> Self {
@@ -166,6 +182,7 @@ impl Handle {
     }
 }
 
+#[cfg(target_os = "macos")]
 impl CalendarSource for Handle {
     async fn list_calendars(&self) -> Result<Vec<Calendar>, Error> {
         if !self.calendar_access_granted {
@@ -263,6 +280,7 @@ impl CalendarSource for Handle {
     }
 }
 
+#[cfg(target_os = "macos")]
 fn offset_date_time_from(date: Retained<NSDate>) -> chrono::DateTime<chrono::Utc> {
     let seconds = unsafe { date.timeIntervalSinceReferenceDate() };
 
@@ -280,7 +298,42 @@ fn offset_date_time_from(date: Retained<NSDate>) -> chrono::DateTime<chrono::Utc
     chrono::DateTime::<chrono::Utc>::from_timestamp(unix_timestamp as i64, 0).unwrap()
 }
 
-#[cfg(test)]
+// Non-macOS implementations
+#[cfg(not(target_os = "macos"))]
+impl Handle {
+    pub fn new() -> Self {
+        Self
+    }
+
+    pub fn request_calendar_access(&mut self) {
+        // No-op on non-macOS platforms
+    }
+
+    pub fn request_contacts_access(&mut self) {
+        // No-op on non-macOS platforms
+    }
+
+    pub fn calendar_access_status(&self) -> bool {
+        false
+    }
+
+    pub fn contacts_access_status(&self) -> bool {
+        false
+    }
+}
+
+#[cfg(not(target_os = "macos"))]
+impl CalendarSource for Handle {
+    async fn list_calendars(&self) -> Result<Vec<Calendar>, Error> {
+        Ok(vec![])
+    }
+
+    async fn list_events(&self, _filter: EventFilter) -> Result<Vec<Event>, Error> {
+        Ok(vec![])
+    }
+}
+
+#[cfg(all(test, target_os = "macos"))]
 mod tests {
     use super::*;
 

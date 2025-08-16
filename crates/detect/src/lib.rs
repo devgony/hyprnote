@@ -7,8 +7,6 @@ pub use app::*;
 pub use browser::*;
 pub use mic::*;
 
-use utils::*;
-
 pub type DetectCallback = std::sync::Arc<dyn Fn(String) + Send + Sync + 'static>;
 
 pub fn new_callback<F>(f: F) -> DetectCallback
