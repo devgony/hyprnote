@@ -73,4 +73,3 @@ objc2-foundation = { workspace = true }
 
 [features]
 default = []
-load-dynamic = ["hypr-aec/load-dynamic"]
