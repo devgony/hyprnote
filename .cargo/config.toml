@@ -1,28 +1,17 @@
 [env]
 MACOSX_DEPLOYMENT_TARGET = { value = "14.2", force = true }
-# Force static linking for all native dependencies
 LLAMA_STATIC = { value = "1", force = true }
-LLAMA_CMAKE_ARGS = { value = "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS_DEBUG=/MT -DCMAKE_C_FLAGS_DEBUG=/MT", force = true }
+LLAMA_CMAKE_ARGS = { value = "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded", force = true }
 ORT_STRATEGY = { value = "download", force = true }
 ORT_USE_STATIC_RUNTIME = { value = "1", force = true }
-ORT_CMAKE_ARGS = { value = "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded -DCMAKE_BUILD_TYPE=Release -DABSL_MSVC_STATIC_RUNTIME=ON -DCMAKE_CXX_FLAGS=/MT -DCMAKE_C_FLAGS=/MT -DCMAKE_CXX_FLAGS_DEBUG=/MT -DCMAKE_C_FLAGS_DEBUG=/MT -DCMAKE_CXX_FLAGS_RELEASE=/MT -DCMAKE_C_FLAGS_RELEASE=/MT -Dprotobuf_MSVC_STATIC_RUNTIME=ON", force = true }
 
 [target.'cfg(all(windows, target_env = "msvc"))']
-rustflags = [
-  "-C",
-  "target-feature=+crt-static",
-  "-C",
-  "link-arg=/NODEFAULTLIB:libcmt",
-  "-C",
-  "link-arg=/NODEFAULTLIB:msvcrt",
-  "-C",
-  "link-arg=/DEFAULTLIB:libcmt",
-]
+rustflags = ["-C", "target-feature=+crt-static"]
 
-[profile.dev.build-override]
+[profile.dev]
 opt-level = 0
-debug = false
+debug = true
 
 [profile.dev.package."*"]
-opt-level = 0
+opt-level = 2
 debug = false
