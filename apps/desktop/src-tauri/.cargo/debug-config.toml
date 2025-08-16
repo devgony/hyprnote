@@ -20,8 +20,8 @@ DEBUG = "1"
 _DEBUG = "1"
 
 # Force llama-cpp to use static runtime
-LLAMA_STATIC = "1"
-LLAMA_CMAKE_ARGS = "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded"
+LLAMA_STATIC = { value = "1", force = true }
+LLAMA_CMAKE_ARGS = { value = "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded", force = true }
 
 # ORT static linking
-ORT_STRATEGY = "compile"
+ORT_STRATEGY = { value = "compile", force = true }
