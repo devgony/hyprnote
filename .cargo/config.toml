@@ -1,7 +1,7 @@
 [env]
 MACOSX_DEPLOYMENT_TARGET = { value = "14.2", force = true }
 LLAMA_STATIC = { value = "1", force = true }
-LLAMA_CMAKE_ARGS = { value = "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded", force = true }
+LLAMA_CMAKE_ARGS = { value = "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded -DCMAKE_BUILD_TYPE=Release", force = true }
 ORT_STRATEGY = { value = "download", force = true }
 ORT_USE_STATIC_RUNTIME = { value = "1", force = true }
 
@@ -10,7 +10,7 @@ rustflags = ["-C", "target-feature=+crt-static"]
 
 [profile.dev]
 opt-level = 0
-debug = true
+debug = false
 
 [profile.dev.package."*"]
 opt-level = 2
