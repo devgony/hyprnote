@@ -2,14 +2,14 @@
 rustflags = ["-C", "target-feature=+crt-static"]
 
 [env]
-# Force all C/C++ compilation to use static runtime
-CFLAGS = "/MT /D_DEBUG /Od"
-CXXFLAGS = "/MT /D_DEBUG /Od"
+# Force all C/C++ compilation to use static debug runtime
+CFLAGS = "/MTd /D_DEBUG /Od"
+CXXFLAGS = "/MTd /D_DEBUG /Od"
 
-# CMake configuration for static runtime
-CMAKE_CXX_FLAGS = "/MT /D_DEBUG /Od"
-CMAKE_C_FLAGS = "/MT /D_DEBUG /Od"
-CMAKE_MSVC_RUNTIME_LIBRARY = "MultiThreaded"
+# CMake configuration for static debug runtime
+CMAKE_CXX_FLAGS = "/MTd /D_DEBUG /Od"
+CMAKE_C_FLAGS = "/MTd /D_DEBUG /Od"
+CMAKE_MSVC_RUNTIME_LIBRARY = "MultiThreadedDebug"
 CMAKE_BUILD_TYPE = "Debug"
 
 # Global debug flags
@@ -19,14 +19,14 @@ _DEBUG = "1"
 # ONNX Runtime - force static runtime for libort_sys
 ORT_STRATEGY = { value = "download", force = true }
 ORT_USE_STATIC_RUNTIME = { value = "1", force = true }
-ORT_CMAKE_ARGS = { value = "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded -DCMAKE_BUILD_TYPE=Release -DABSL_MSVC_STATIC_RUNTIME=ON", force = true }
-# Force static CRT for all ONNX builds
-CXXFLAGS_x86_64_pc_windows_msvc = { value = "/MT", force = true }
-CFLAGS_x86_64_pc_windows_msvc = { value = "/MT", force = true }
+ORT_CMAKE_ARGS = { value = "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDebug -DCMAKE_BUILD_TYPE=Debug -DABSL_MSVC_STATIC_RUNTIME=ON", force = true }
+# Force static debug CRT for all ONNX builds
+CXXFLAGS_x86_64_pc_windows_msvc = { value = "/MTd", force = true }
+CFLAGS_x86_64_pc_windows_msvc = { value = "/MTd", force = true }
 
-# LLAMA static linking - force release mode to match ONNX Runtime
+# LLAMA static linking - force debug mode to match ONNX Runtime
 LLAMA_STATIC = { value = "1", force = true }
-LLAMA_CMAKE_ARGS = { value = "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=/MT -DCMAKE_C_FLAGS=/MT", force = true }
+LLAMA_CMAKE_ARGS = { value = "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDebug -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS=/MTd -DCMAKE_C_FLAGS=/MTd", force = true }
 
 # Sentencepiece static linking
 SENTENCEPIECE_SYS_STATIC = "1"
