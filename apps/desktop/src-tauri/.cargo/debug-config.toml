@@ -27,9 +27,13 @@ CMAKE_BUILD_TYPE = "Debug"
 DEBUG = "1"
 _DEBUG = "1"
 
-# ONNX Runtime - use download strategy with static runtime
+# ONNX Runtime - force static runtime for libort_sys
 ORT_STRATEGY = { value = "download", force = true }
 ORT_USE_STATIC_RUNTIME = { value = "1", force = true }
+ORT_CMAKE_ARGS = { value = "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded -DCMAKE_BUILD_TYPE=Release -DABSL_MSVC_STATIC_RUNTIME=ON", force = true }
+# Force static CRT for all ONNX builds
+CXXFLAGS_x86_64_pc_windows_msvc = { value = "/MT", force = true }
+CFLAGS_x86_64_pc_windows_msvc = { value = "/MT", force = true }
 
 # LLAMA static linking - force release mode to match ONNX Runtime
 LLAMA_STATIC = { value = "1", force = true }
@@ -37,6 +41,14 @@ LLAMA_CMAKE_ARGS = { value = "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded -DCMAKE
 
 # Sentencepiece static linking
 SENTENCEPIECE_SYS_STATIC = "1"
+
+[profile.dev.package.ort]
+opt-level = 2
+debug = false
+
+[profile.dev.package.ort-sys]
+opt-level = 2
+debug = false
 
 # # Force llama-cpp to use static runtime
 # LLAMA_STATIC = { value = "1", force = true }
