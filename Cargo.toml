@@ -9,7 +9,13 @@ debug = false
 
 [workspace]
 resolver = "2"
-members = ["apps/desktop/src-tauri", "crates/*", "owhisper/*", "plugins/*"]
+members = [
+  "apps/desktop/src-tauri", 
+  "crates/*", 
+  "owhisper/*", 
+  "plugins/*"
+]
+exclude = ["crates/kyutai"]
 
 [workspace.package]
 rust-version = "1.88.0"
