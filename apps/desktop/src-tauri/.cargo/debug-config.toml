@@ -7,7 +7,9 @@ rustflags = [
     "-C",
     "link-arg=/NODEFAULTLIB:msvcrtd",
     "-C",
-    "link-arg=/DEFAULTLIB:libcmt",
+    "link-arg=/NODEFAULTLIB:libcmtd",
+    "-C",
+    "link-arg=/FORCE:MULTIPLE"
 ]
 
 [env]
@@ -32,9 +34,6 @@ ORT_USE_STATIC_RUNTIME = { value = "1", force = true }
 # LLAMA static linking  
 LLAMA_STATIC = { value = "1", force = true }
 LLAMA_CMAKE_ARGS = { value = "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded -DCMAKE_BUILD_TYPE=Release", force = true }
-
-# Force release mode for all native dependencies
-CMAKE_BUILD_TYPE = "Release"
 
 # Sentencepiece static linking
 SENTENCEPIECE_SYS_STATIC = "1"
