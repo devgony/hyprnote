@@ -21,6 +21,15 @@ CMAKE_BUILD_TYPE = "Debug"
 DEBUG = "1"
 _DEBUG = "1"
 
+# ONNX Runtime static linking
+ORT_STRATEGY = "download"
+ORT_USE_STATIC_RUNTIME = "1"
+ORT_CMAKE_ARGS = "-DABSL_MSVC_STATIC_RUNTIME=ON -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded"
+
+# LLAMA static linking
+LLAMA_STATIC = "1"
+LLAMA_CMAKE_ARGS = "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded"
+
 # # Force llama-cpp to use static runtime
 # LLAMA_STATIC = { value = "1", force = true }
 # LLAMA_CMAKE_ARGS = { value = "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded", force = true }
