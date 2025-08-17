@@ -34,6 +34,10 @@ LLAMA_STATIC = { value = "1", force = true }
 LLAMA_CMAKE_ARGS = { value = "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded -DCMAKE_BUILD_TYPE=Release", force = true }
 
 # Force release mode for all native dependencies
+CMAKE_BUILD_TYPE = "Release"
+
+# Sentencepiece static linking
+SENTENCEPIECE_SYS_STATIC = "1"
 
 # # Force llama-cpp to use static runtime
 # LLAMA_STATIC = { value = "1", force = true }
