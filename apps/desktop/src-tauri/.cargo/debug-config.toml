@@ -1,3 +1,4 @@
+
 [target.'cfg(all(windows, target_env = "msvc"))']
 rustflags = ["-C", "target-feature=+crt-static"]
 
@@ -5,6 +6,13 @@ rustflags = ["-C", "target-feature=+crt-static"]
 # Force all C/C++ compilation to use static debug runtime
 CFLAGS = "/MTd /D_DEBUG /Od"
 CXXFLAGS = "/MTd /D_DEBUG /Od"
+
+LLAMA_STATIC = { value = "1", force = true }
+LLAMA_CMAKE_ARGS = { value = "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS_RELEASE=/MTd -DCMAKE_C_FLAGS_RELEASE=/MTd", force = true }
+ORT_STRATEGY = { value = "download", force = true }
+ORT_DOWNLOAD_STRATEGY = "static"
+ORT_USE_STATIC_RUNTIME = { value = "1", force = true }
+ORT_CMAKE_ARGS = { value = "-DABSL_MSVC_STATIC_RUNTIME=ON -DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDebug -DCMAKE_CXX_FLAGS_RELEASE=/MTd -DCMAKE_C_FLAGS_RELEASE=/MTd", force = true }
 
 # CMake configuration for static debug runtime
 CMAKE_CXX_FLAGS = "/MTd /D_DEBUG /Od"
@@ -15,33 +23,33 @@ CMAKE_BUILD_TYPE = "Debug"
 # Global debug flags
 DEBUG = "1"
 _DEBUG = "1"
-
-# ONNX Runtime - force static runtime for libort_sys
-ORT_STRATEGY = { value = "download", force = true }
-ORT_USE_STATIC_RUNTIME = { value = "1", force = true }
-ORT_CMAKE_ARGS = { value = "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDebug -DCMAKE_BUILD_TYPE=Debug -DABSL_MSVC_STATIC_RUNTIME=ON", force = true }
-# Force static debug CRT for all ONNX builds
-CXXFLAGS_x86_64_pc_windows_msvc = { value = "/MTd", force = true }
-CFLAGS_x86_64_pc_windows_msvc = { value = "/MTd", force = true }
-
-# LLAMA static linking - force debug mode to match ONNX Runtime
-LLAMA_STATIC = { value = "1", force = true }
-LLAMA_CMAKE_ARGS = { value = "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDebug -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS=/MTd -DCMAKE_C_FLAGS=/MTd", force = true }
-
-# Sentencepiece static linking
-SENTENCEPIECE_SYS_STATIC = "1"
-
-[profile.dev.package.ort]
-opt-level = 2
-debug = false
-
-[profile.dev.package.ort-sys]
-opt-level = 2
-debug = false
-
-# # Force llama-cpp to use static runtime
-# LLAMA_STATIC = { value = "1", force = true }
-# LLAMA_CMAKE_ARGS = { value = "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded", force = true }
 #
-# # ORT static linking
-# ORT_STRATEGY = { value = "compile", force = true }
+# # ONNX Runtime - force static runtime for libort_sys
+# ORT_STRATEGY = { value = "download", force = true }
+# ORT_USE_STATIC_RUNTIME = { value = "1", force = true }
+# ORT_CMAKE_ARGS = { value = "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDebug -DCMAKE_BUILD_TYPE=Debug -DABSL_MSVC_STATIC_RUNTIME=ON", force = true }
+# # Force static debug CRT for all ONNX builds
+# CXXFLAGS_x86_64_pc_windows_msvc = { value = "/MTd", force = true }
+# CFLAGS_x86_64_pc_windows_msvc = { value = "/MTd", force = true }
+#
+# # LLAMA static linking - force debug mode to match ONNX Runtime
+# LLAMA_STATIC = { value = "1", force = true }
+# LLAMA_CMAKE_ARGS = { value = "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreadedDebug -DCMAKE_BUILD_TYPE=Debug -DCMAKE_CXX_FLAGS=/MTd -DCMAKE_C_FLAGS=/MTd", force = true }
+#
+# # Sentencepiece static linking
+# SENTENCEPIECE_SYS_STATIC = "1"
+#
+# [profile.dev.package.ort]
+# opt-level = 2
+# debug = false
+#
+# [profile.dev.package.ort-sys]
+# opt-level = 2
+# debug = false
+#
+# # # Force llama-cpp to use static runtime
+# # LLAMA_STATIC = { value = "1", force = true }
+# # LLAMA_CMAKE_ARGS = { value = "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded", force = true }
+# #
+# # # ORT static linking
+# # ORT_STRATEGY = { value = "compile", force = true }
