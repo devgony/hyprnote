@@ -27,13 +27,13 @@ CMAKE_BUILD_TYPE = "Debug"
 DEBUG = "1"
 _DEBUG = "1"
 
-# Disable ONNX Runtime compilation to avoid runtime conflicts
-ORT_STRATEGY = { value = "system", force = true }
+# ONNX Runtime - use download strategy with static runtime
+ORT_STRATEGY = { value = "download", force = true }
 ORT_USE_STATIC_RUNTIME = { value = "1", force = true }
 
-# LLAMA static linking  
+# LLAMA static linking - force release mode to match ONNX Runtime
 LLAMA_STATIC = { value = "1", force = true }
-LLAMA_CMAKE_ARGS = { value = "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded -DCMAKE_BUILD_TYPE=Release", force = true }
+LLAMA_CMAKE_ARGS = { value = "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=/MT -DCMAKE_C_FLAGS=/MT", force = true }
 
 # Sentencepiece static linking
 SENTENCEPIECE_SYS_STATIC = "1"
