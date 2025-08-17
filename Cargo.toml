@@ -9,12 +9,7 @@ debug = false
 
 [workspace]
 resolver = "2"
-members = [
-  "apps/desktop/src-tauri",
-  "crates/*",
-  "owhisper/*",
-  "plugins/*",
-]
+members = ["apps/desktop/src-tauri", "crates/*", "owhisper/*", "plugins/*"]
 
 [workspace.package]
 rust-version = "1.88.0"
@@ -236,4 +231,3 @@ tokenizers = "0.21.4"
 
 [patch.crates-io]
 cpal = { git = "https://github.com/RustAudio/cpal", rev = "51c3b43" }
-esaxx-rs = { git = "https://github.com/thewh1teagle/esaxx-rs.git" }
