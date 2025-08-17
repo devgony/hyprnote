@@ -1,5 +1,10 @@
 [target.'cfg(all(windows, target_env = "msvc"))']
-rustflags = ["-C", "target-feature=+crt-static"]
+rustflags = [
+  "-C", "target-feature=+crt-static",
+  "-C", "link-arg=/NODEFAULTLIB:libcmt",
+  "-C", "link-arg=/NODEFAULTLIB:msvcrt", 
+  "-C", "link-arg=/NODEFAULTLIB:msvcrtd"
+]
 
 [env]
 # Force all C/C++ compilation to use static runtime
@@ -16,9 +21,9 @@ CMAKE_BUILD_TYPE = "Debug"
 DEBUG = "1"
 _DEBUG = "1"
 
-# Force llama-cpp to use static runtime
-LLAMA_STATIC = { value = "1", force = true }
-LLAMA_CMAKE_ARGS = { value = "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded", force = true }
-
-# ORT static linking
-ORT_STRATEGY = { value = "compile", force = true }
+# # Force llama-cpp to use static runtime
+# LLAMA_STATIC = { value = "1", force = true }
+# LLAMA_CMAKE_ARGS = { value = "-DCMAKE_MSVC_RUNTIME_LIBRARY=MultiThreaded", force = true }
+#
+# # ORT static linking
+# ORT_STRATEGY = { value = "compile", force = true }
